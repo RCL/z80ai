@@ -44,6 +44,7 @@ class Z80Builder:
         """Apply all fixups"""
         for offset, label, ftype in self.fixups:
             if label not in self.labels:
+                print (f"Unknown label: '{label}'")		
                 raise ValueError(f"Unknown label: {label}")
             target = self.labels[label]
 
@@ -119,6 +120,9 @@ class Z80Builder:
     def djnz(self, label: str):
         self.emit(0x10)
         self.fixup_rel(label)
+
+    def out_n_a(self, port: int):
+        self.emit(0xD3, port & 0xFF)
 
     # Loads
     def ld_hl_nn(self, val): self.emit(0x21); self.emit_word(val)
